@@ -8,4 +8,4 @@ exports.getAllMovies = factory.getAll(movie);
 exports.getMovie = factory.getOne(movie);
 exports.createMovie = factory.createOne(movie);
 exports.deleteMovie = factory.deleteOne(movie);
-exports.updateMovie = factory.updateOne(movie);
+exports.updateMovie = factory.updateMovie();

@@ -18,13 +18,14 @@ const actorSchema = new mongoose.Schema({
 },
     {
         toJSON: { virtuals: true },
-        toObject: { virtuals: true }
+        toObject: { virtuals: true },
+        id: false
     })
-
+actorSchema.index({ movie: 1 }, { unique: true })
 actorSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'movies',
-        select: '-actors -duration -durationHour -id -_id'
+        select: '-actors -duration -_id'
 
     });
 

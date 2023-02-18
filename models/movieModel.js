@@ -7,7 +7,7 @@ const movieSchema = new mongoose.Schema({
         type: String,
         required: [true, 'A movie must have a name!'],
         unique: true,
-        maxlength: [20, 'A movie name cannot be longer than 20 characters']
+        maxlength: [50, 'A movie name cannot be longer than 20 characters']
     },
     duration: {
         type: Number,
@@ -29,7 +29,8 @@ const movieSchema = new mongoose.Schema({
 },
     {
         toJSON: { virtuals: true },
-        toObject: { virtuals: true }
+        toObject: { virtuals: true },
+        id: false
     })
 
 movieSchema.virtual('durationHour').get(function () {
@@ -40,7 +41,7 @@ movieSchema.virtual('durationHour').get(function () {
 movieSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'actors',
-        select: '-__v -_id -movies -movie -id'
+        select: '-__v -_id -movies -movie'
 
     });
 
