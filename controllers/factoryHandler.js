@@ -63,11 +63,8 @@ exports.createOne = Model =>
 
 exports.getAll = Model =>
     catchAsync(async (req, res, next) => {
-        // const doc = await Model.find();
-
 
         let filter = {};
-        console.log(filter)
         const features = new APIFeatures(Model.find(filter), req.query)
             .filter()
 
