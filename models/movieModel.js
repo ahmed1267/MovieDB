@@ -7,7 +7,7 @@ const movieSchema = new mongoose.Schema({
         type: String,
         required: [true, 'A movie must have a name!'],
         unique: true,
-        maxlength: [50, 'A movie name cannot be longer than 20 characters']
+        maxlength: [50, 'A movie name cannot be longer than 50 characters']
     },
     duration: {
         type: Number,

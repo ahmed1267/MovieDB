@@ -1,7 +1,7 @@
 const express = require('express');
 const actor = require('../models/actorModel');
 const router = express.Router();
-const actorController = require('../controllers/ActorController');
+const actorController = require('../controllers/actorController');
 const authController = require('./../controllers/authController');
 
 router

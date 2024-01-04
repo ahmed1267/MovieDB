@@ -8,65 +8,6 @@ const movie = require('../models/movieModel');
 const actor = require('../models/actorModel');
 
 
-const checkActor = async (doc, body) => {
-
-    const addedActor = await actor.findById(body.actors[0])
-    console.log(addedActor.name)
-    doc.actors.forEach(actor => {
-        console.log(actor.name)
-        if (addedActor.name === actor.name) {
-            return false;
-            // res.status(401).json({
-            //     status: 'Fail'
-            // })
-        } else { return true }
-    })
-    // const keys = Object.keys(body);
-    // let keyNum = 0;
-    // keys.forEach(async function (key) {
-    //     keyNum = +1
-    //     if (key === 'actors') {
-
-
-    //         const actorName = Object.values(actor.findById(Object.values(body)[keyNum]))[0]
-    //         const found = await movie.aggregate([
-    //             {
-    //                 $match: {
-    //                     $and: [
-    //                         { name: movieName },
-    //                         { actors: actorName }
-    //                     ]
-    //                 }
-    //             }
-    //         ])
-
-    //         if (!found) {
-    //             next()
-    //         }
-
-    //         return next(new appError('This actor is already added to this movie', 401))
-    //     }
-    // })
-    // const ids = Object.values(body);
-    // //console.log(ids);
-    // await keys.forEach(function (key) {
-    //     if (key === 'actors') {
-
-    //         ids.forEach(function (id) {
-    //             //console.log(id)
-    //             //let currentActor = actor.findById(id)
-    //             // console.log(Object.values(currentActor).find(value => currentActor[value] === name))
-    //             // console.log(currentActor)
-    //             doc.actors.forEach(function (currentMovieActorId) {
-    //                 if (id === currentMovieActorId.toString()) {
-    //                     return next(new appError('This actor is already added', 401))
-    //                 }
-    //             })
-    //         })
-    //     }
-    // })
-
-}
 
 exports.deleteOne = Model =>
     catchAsync(async (req, res, next) => {
@@ -161,26 +102,32 @@ exports.getOne = Model =>
 exports.updateMovie = () =>
     catchAsync(async (req, res, next) => {
 
-        let doc
+        let movie
 
         if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
 
-            doc = await movie.findById(req.params.id)
+            movie = await movie.findById(req.params.id)
 
         } else { return next(new appError('This is not a suitable Id', 401)) }
 
         if (!doc) { return next(new appError('No Movie with this Id', 404)) }
 
-        console.log(req.body.actors)
         if (req.body.actors) {
 
-            const actorCheck = await checkActor(doc, req.body)
-            console.log(actorCheck)
+            let actorCheck = true;
+
+            for (let actor in req.body.actors) {
+                for (let movieActor of movie.actors) {
+                    if (movieActor === actor) {
+                        actorCheck = false
+                    }
+                }
+            }
 
             if (actorCheck === false) { return next(new appError('This actor is already added to this movie', 401)) }
-
-            await movie.updateOne({ _id: req.params.id }, { $push: req.body.actors })
         }
+
+        await movie.updateOne({ _id: req.params.id }, { $push: req.body.actors })
 
         res.status(200).json({
             status: 'Success',
